@@ -70,7 +70,7 @@ Rebuild the single file after changing code: `python3 build.py`. If you change f
 
 ## Tests
 
-Browser tests drive the game the way a player does: real touch events (Chrome DevTools `Input.dispatchTouchEvent`) on the actual levers, buttons and track view, in Pixel 7 and iPhone emulation. `page.evaluate` is only used to read state and, in the mechanics tests, to lay out a scenario (`tests/fixture.js`: where the train stands and what it's pulling).
+Browser tests drive the game the way a player does: real touch events (Chrome DevTools `Input.dispatchTouchEvent`) on the actual levers, buttons and track view, in Pixel 7 and iPhone emulation. `page.evaluate` is used to read state, to lay out scenarios (`tests/fixture.js`: where the train stands and what it's pulling), and in a few menu and recovery checks to set cash, fake app backgrounding or corrupt the save. Driving, points, coupling, delivering and buying are always done with touches.
 
 ```
 pip install playwright && python -m playwright install chromium
@@ -80,7 +80,8 @@ bash tests/run_all.sh
 - `test_slice.py` the vertical slice on Pixel 7 and iPhone 13: depot, drive, set points, couple gently, reverse, home, deliver, paid, next shift.
 - `test_mechanics.py` weight vs acceleration and braking, stop marker accuracy, wheelslip, sand, stalling on a bank and recovering by leaving wagons, coupling speed, fragile and loose loads, points (tap, occupied, trailing), reverser lockout, closed and repaired viaduct, derailing at the buffers, running out of fuel and the tow, pointercancel, two-thumb control.
 - `test_menus.py` every menu, depot tabs, upgrades with their real effect, repairs, daily reproducibility, pause, backgrounding, map, save/reload, settings persistence, logbook.
+- `test_recovery.py` never stuck: tow from the pause menu, out of fuel, backing out of a dead end, save and reload, a corrupt save, switching apps.
 - `test_layout.py` portrait layouts from iPhone SE to large Android: nothing overlaps, everything on screen and big enough to hit.
-- `test_career.py` a longer play-through by a touch-driven bot: several shifts, money, an upgrade, a repair.
+- `test_career.py` a longer play-through by a touch-driven bot: three shifts where it picks freight, plans a route, sets the points as they come up, brings it home and delivers, then buys an upgrade.
 - `test_http.py` manifest, service worker, offline reload, and `dist/index.html` from disk.
 - `test_perf.py` frame times while driving.

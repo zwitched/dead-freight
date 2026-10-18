@@ -62,12 +62,12 @@ function drawVehicles(t){const S=SIM.S;
       g.restore();}
   }}
 function particles(dt){for(const p of P){if(!p.on)continue;p.life-=dt;if(p.life<=0){p.on=0;continue;}p.x+=p.vx*dt;p.y+=p.vy*dt;const f=p.life/p.max;
-  if(p.type==='smoke'){p.vx*=.985;p.vy*=.985;p.r+=dt*7;g.fillStyle=`rgba(${p.dark?40:90},${p.dark?38:88},${p.dark?36:84},${.42*f})`;g.beginPath();g.arc(p.x,p.y,p.r,0,7);g.fill();}
+  if(p.type==='smoke'){p.vx*=.985;p.vy*=.985;p.r+=dt*9;g.fillStyle=`rgba(${p.dark?40:90},${p.dark?38:88},${p.dark?36:84},${(p.dark?.3:.34)*f})`;g.beginPath();g.arc(p.x,p.y,p.r,0,7);g.fill();}
   else if(p.type==='spark'){g.fillStyle=`rgba(255,${180+Math.random()*70|0},90,${f})`;g.fillRect(p.x,p.y,1.2,1.2);}
   else if(p.type==='dust'){p.r+=dt*12;g.fillStyle=`rgba(150,130,100,${.35*f})`;g.beginPath();g.arc(p.x,p.y,p.r,0,7);g.fill();}
   else if(p.type==='sand'){g.fillStyle=`rgba(210,180,120,${.6*f})`;g.fillRect(p.x,p.y,1.5,1.5);}}}
 function feed(dt){const S=SIM.S;if(!S.train)return;const L=S.loco,v=Math.abs(S.train.v);const fx=Math.cos(L.h)*(L.face===1?-1:1),fy=Math.sin(L.h)*(L.face===1?-1:1);
-  const ex=L.x-fx*(L.len/2-19),ey=L.y-fy*(L.len/2-19);GAME.smokeAcc=(GAME.smokeAcc||0)+dt*(2.5+S.ctl.thr*5+(GAME.puff||0)*40);
+  const ex=L.x-fx*(L.len/2-19),ey=L.y-fy*(L.len/2-19);GAME.smokeAcc=(GAME.smokeAcc||0)+dt*(2+S.ctl.thr*3.4+(GAME.puff||0)*40)*(Math.abs(S.train.v)<4?.6:1);
   while(GAME.smokeAcc>1){GAME.smokeAcc--;const wv=S.train.v;const mvx=-(Math.cos(L.h))*wv*.15,mvy=-(Math.sin(L.h))*wv*.15;const p=emit('smoke',ex,ey,mvx*0+8+Math.random()*6,-6-Math.random()*6+0,1.6+S.ctl.thr*.35,2+S.ctl.thr*.4);P[(pi+P.length-1)%P.length].dark=(GAME.puff||0)>0||S.ctl.thr>=4;}
   if(GAME.puff>0)GAME.puff-=dt;
   if(L.slip>.3){for(let i=0;i<2;i++)emit('spark',L.x+(Math.random()-.5)*L.len*.6,L.y+(Math.random()-.5)*10,(Math.random()-.5)*40,(Math.random()-.5)*40,.25,1);}

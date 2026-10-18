@@ -1,5 +1,5 @@
 // Dead Freight service worker: network first so updates arrive straight away, cache as the offline fallback.
-const CACHE='deadfreight-v1';
+const CACHE='deadfreight-v2';
 const FILES=['./','index.html','css/style.css','manifest.webmanifest','icon.png','icon-192.png',
  'js/rng.js','js/track.js','js/map.js','js/train.js','js/data.js','js/sim.js','js/art.js','js/render.js','js/audio.js','js/save.js','js/input.js','js/ui.js','js/game.js'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting()));});

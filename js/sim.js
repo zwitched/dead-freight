@@ -70,7 +70,8 @@ function step(dt){
   // move
   const r=TN.move(T,nv*dt);T.v=nv;S.dist+=Math.abs(r.moved);
   if(r.hit){const imp=Math.abs(nv);
-    if(r.hit.type==='car'&&r.hit.which>=0){
+    if(r.hit.type==='car'&&r.hit.c.fresh){T.v=0;} // wagons just left behind: the coupling is open, they only buffer up until you pull clear
+    else if(r.hit.type==='car'&&r.hit.which>=0){
       const o=r.hit.c,Mo=o.veh.reduce((a,b)=>a+b.mass,0),side=nv>0?0:1;
       const firstNew=o.veh;TN.couple(T,side,o,r.hit.which);T.v=nv*M/(M+Mo);S.couplings++;
       const safe=sp.safe,ex=imp-safe;let q='soft';
@@ -88,6 +89,7 @@ function step(dt){
         if(r.hit.type==='bar'){const e=TK.E[TN.end(T,nv>0?0:1).e];const b=e.bars.find(b=>!b.open);emit('bar',{key:b?b.key:''});}}
     }
   }
+  for(const c of TN.cons)if(c.fresh&&c!==T){let near=false;for(const sd of [0,1]){const en=TN.end(T,sd);const w=TK.walk(en.e,en.s,en.d,3,false);const ct=TN.contact(T,w.pieces);if(ct&&ct.c===c)near=true;}if(!near)c.fresh=0;}
   const V=Math.abs(T.v);S.maxV=Math.max(S.maxV,V);
   // curves
   let over=0;for(const c of T.veh){const lim=TK.limAt(c.e,c.s);if(V>lim){over=Math.max(over,V-lim);if(!c.loco&&c.lo)damage(c,(V-lim)*.0045*c.lo*dt*(1+c.lo),'curve');if(!c.loco&&V>lim*1.35)damage(c,(V-lim*1.35)*.003*dt,'curve');}}

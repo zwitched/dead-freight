@@ -24,7 +24,9 @@ async def main():
     await E("FIX.train('V1','J3',10,[FIX.cargo('Fire bricks')],{fuel:.2})");await pg.wait_for_timeout(200)
     await dr.set_brk(0);await dr.set_thr(4)
     for i in range(120):
-      if (await st(pg))['ctx']=='tow':break
+      x=await st(pg)
+      if x['ctx']=='tow':break
+      if x['fuel']<=0 and x['brk']<.9:await dr.set_thr(0);await dr.set_brk(1)  # engine dead: brake to a stand
       await pg.wait_for_timeout(200)
     x=await st(pg);t.chk('out of fuel: a "Radio for a tow" button appears on the track view',x['ctx']=='tow',x['ctx'],x['fuel'])
     c0=await E("SV.D.career.cash");await tc.tapel('#bTowCtx');await pg.wait_for_timeout(300)

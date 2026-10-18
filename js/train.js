@@ -85,7 +85,7 @@ function split(c,k){
   const hasLocoA=A.veh.some(v=>v.loco);
   const keep=hasLocoA?A:B,drop=hasLocoA?B:A;
   c.pieces=keep.pieces;c.veh=keep.veh;layout(c);
-  const n={id:uid++,pieces:drop.pieces,veh:drop.veh,v:0,loco:null};layout(n);cons.push(n);return n;
+  const n={id:uid++,pieces:drop.pieces,veh:drop.veh,v:0,loco:null,fresh:1};layout(n);cons.push(n);return n;
 }
 // switches that any consist is sitting on (within foul distance)
 function occupied(nodeId,F=14){

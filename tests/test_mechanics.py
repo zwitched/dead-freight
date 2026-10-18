@@ -154,6 +154,8 @@ async def main():
     await dr.set_brk(0);await dr.set_thr(4)
     for i in range(200):
       if await E("SIM.S.fail==='fuel'"):break
+      x=await st(pg)
+      if x['fuel']<=0 and x['brk']<.9:await dr.set_thr(0);await dr.set_brk(1)  # engine dead: brake to a stand
       await pg.wait_for_timeout(150)
     await pg.wait_for_timeout(300)
     t.chk('running dry strands you and offers a tow',await E("SIM.S.fail")=='fuel' and await pg.is_visible('#bTowCtx'))

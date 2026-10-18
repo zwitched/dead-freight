@@ -95,7 +95,7 @@ function step(dt){
   // harsh braking or lurching hurts fragile loads
   const ah=Math.abs(S.aSm);if(ah>7){for(const c of carsOn())if(c.fr){damage(c,(ah-7)*.006*c.fr*dt,'braking');}if(!S.flags.brakeHard&&carsOn().some(c=>c.fr>.5)&&ah>9){S.flags.brakeHard=1;emit('radio',{k:'brakeHard'});}}
   // stall / roll back on a bank
-  if(notch>0&&V<2&&Math.sign(Fg)===-sg&&Math.abs(Fg)>Fad*.8&&carsOn().length){S.stallT+=dt;if(S.stallT>2.5&&!S.flags.stall){S.flags.stall=1;emit('radio',{k:'stall'});}}else S.stallT=0;
+  if(notch>0&&V<2&&Math.sign(Fg)===-sg&&Math.abs(Fg)+M*C.R0>Math.abs(Ftr)*.85&&carsOn().length){S.stallT+=dt;if(S.stallT>2.5&&!S.flags.stall){S.flags.stall=1;emit('radio',{k:'stall'});}}else S.stallT=0;
   if(V>3&&Math.sign(T.v)===-sg&&notch>0&&S.ctl.brk<.2){S.rollT+=dt;if(S.rollT>1&&!S.flags.roll){S.flags.roll=1;emit('radio',{k:'roll'});}}else S.rollT=0;
   // fuel
   const fr=S.fuel/S.tank;if(fr<.25&&!S.flags.f25){S.flags.f25=1;emit('radio',{k:'fuel25'});}if(fr<.1&&!S.flags.f10){S.flags.f10=1;emit('radio',{k:'fuel10'});}

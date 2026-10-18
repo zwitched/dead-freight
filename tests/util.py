@@ -13,6 +13,8 @@ class T:
   def done(s,errs):
     print('ERRORS',errs if errs else 'none');print(f'SUMMARY {s.name}: {s.n-len(s.bad)}/{s.n} passed',flush=True)
     if errs or s.bad:sys.exit(1)
+FIXJS=(ROOT/'tests/fixture.js').read_text()
+async def fixture(pg):await pg.add_script_tag(content=FIXJS)
 async def page(p,dev='Pixel 7',url=URL,clear=True,ctx_kw=None):
   b=await p.chromium.launch(args=['--autoplay-policy=no-user-gesture-required'])
   kw=dict(p.devices[dev]) if isinstance(dev,str) else dict(dev)

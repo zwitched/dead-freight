@@ -67,7 +67,7 @@ const REPAIR={
  quarry:{name:'Cobble Hill landslip',desc:'Dig out the cutting to the quarry. Steep, heavy, worth it.',cost:1000,need:'viaduct',opens:'quarry'}
 };
 function spec(u){u=u||{};const b=u.brakes|0,p=u.power|0,t=u.tank|0,s=u.sand|0,c=u.coupler|0;
- return {Bl:[1000,1200,1450,1700][b],cb:[1,1.3,1.6,2][b],Fmax:[520,600,690,780][p],P:[16000,18500,21000,24000][p],ADH:[480,525,570,620][p],mass:[40,42,44,46][p],
+ return {Bl:[1000,1200,1450,1700][b],cb:[1,1.3,1.6,2][b],Fmax:[600,680,770,860][p],P:[16000,18500,21000,24000][p],ADH:[560,610,660,720][p],mass:[40,42,44,46][p],
   tank:[100,135,170,210][t],sand:[0,3,5,8][s],safe:[9,12,15,18][c]};}
 const RADIO={
  start:['Morning. Kettle\'s on at Control. Mind how you go.','Dot here. Line\'s quiet. Line\'s always quiet.','Fuel\'s in, brakes are sort of in. Off you go.','Another shift, then. The trains will be pleased.'],

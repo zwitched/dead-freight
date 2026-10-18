@@ -2,7 +2,7 @@
 // A consist is a list of track pieces from end A to end B plus its vehicles in the same order.
 'use strict';
 const TN=(()=>{
-const C={G:40,R0:.25,R2:.00012,SAFE:9,BUMP:12,DERAIL:46,VMAX:85,FUEL_IDLE:.006,FUEL_K:4.2e-5};
+const C={G:32,R0:.25,R2:.00012,SAFE:9,BUMP:12,DERAIL:46,VMAX:85,FUEL_IDLE:.006,FUEL_K:4.2e-5};
 const cons=[];let uid=1;
 const plen=p=>Math.abs(p.s1-p.s0);
 function len(c){let l=0;for(const p of c.pieces)l+=plen(p);return l;}

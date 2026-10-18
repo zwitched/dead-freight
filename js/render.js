@@ -16,11 +16,14 @@ function follow(dt,snap){const S=SIM.S;if(!S.train)return;const L=S.loco,v=S.tra
   const look=Math.min(150,Math.abs(v)*1.7);const tx=L.x+hx*look+cam.px,ty=L.y+hy*look+cam.py;
   const tz=(2.35-Math.min(1,Math.abs(v)/75)*1.15)*(GAME.zoomMul||1);const k=snap?1:Math.min(1,dt*2.2);
   cam.x+=(tx-cam.x)*k;cam.y+=(ty-cam.y)*k;cam.z+=(tz-cam.z)*Math.min(1,dt*1.2)*(snap?99:1);cam.z=Math.max(.45,Math.min(3,cam.z));
-  if(!GAME.panning){cam.px*=Math.pow(.25,dt);cam.py*=Math.pow(.25,dt);}
+  if(!GAME.panning&&!(SIM.S.train&&Math.abs(SIM.S.train.v)<2)){cam.px*=Math.pow(.25,dt);cam.py*=Math.pow(.25,dt);}
 }
 function drawChunks(){const [x0,y0]=toWorld(0,0),[x1,y1]=toWorld(W,H);const C=ART.CH;
   for(let cx=Math.max(0,Math.floor(x0/C));cx<=Math.floor(x1/C);cx++)for(let cy_=Math.max(0,Math.floor(y0/C));cy_<=Math.floor(y1/C);cy_++){
-    if(cx*C>MAP.W+200||cy_*C>MAP.H+200)continue;const c=ART.chunk(cx,cy_);g.drawImage(c,cx*C,cy_*C,C,C);}}
+    if(cx*C>MAP.W+200||cy_*C>MAP.H+200)continue;const c=ART.chunk(cx,cy_);g.drawImage(c,cx*C,cy_*C,C,C);}
+  // build one chunk ahead per frame so driving into new ground doesn't hitch
+  const ax=Math.floor(x0/C)-1,bx=Math.floor(x1/C)+1,ay=Math.floor(y0/C)-1,by=Math.floor(y1/C)+1;
+  for(let cx=Math.max(0,ax);cx<=bx;cx++)for(let cy_=Math.max(0,ay);cy_<=by;cy_++){if(cx*C>MAP.W+200||cy_*C>MAP.H+200)continue;if(!ART.has(cx,cy_)){ART.chunk(cx,cy_);return;}}}
 function worldXf(){const s=cam.z*dpr;const sh=cam.shake>0?(Math.random()-.5)*cam.shake*2:0;g.setTransform(s,0,0,s,(W/2-cam.x*cam.z+sh)*dpr,(cy()-cam.y*cam.z+sh)*dpr);}
 function pathLine(pieces,col,w,dash){g.strokeStyle=col;g.lineWidth=w;g.setLineDash(dash||[]);g.lineCap='round';g.beginPath();let first=true;
   for(const p of pieces){const st=Math.sign(p.s1-p.s0)||1;const n=Math.max(1,Math.ceil(Math.abs(p.s1-p.s0)/6));for(let i=0;i<=n;i++){const q=TK.pt(p.e,p.s0+(p.s1-p.s0)*i/n);first?g.moveTo(q.x,q.y):g.lineTo(q.x,q.y);first=false;}}g.stroke();g.setLineDash([]);}

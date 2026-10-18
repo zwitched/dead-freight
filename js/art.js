@@ -368,5 +368,5 @@ function init(){
   for(const e of TK.E){let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;for(let i=0;i<e.n;i++){const x=e.pts[i*2],y=e.pts[i*2+1];x0=Math.min(x0,x);y0=Math.min(y0,y);x1=Math.max(x1,x);y1=Math.max(y1,y);}e.bb=[x0-20,y0-20,x1+20,y1+20];}
   buildGrid();buildScenery();
 }
-return {CH,RES,init,chunk,sprite,areaAt,invalidate,items,along,AREAS,drawItem,LOADC,get rev(){return rev;}};
+return {has:(x,y)=>cache.has(x+','+y),CH,RES,init,chunk,sprite,areaAt,invalidate,items,along,AREAS,drawItem,LOADC,get rev(){return rev;}};
 })();

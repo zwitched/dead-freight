@@ -27,7 +27,7 @@ function careerLots(c){
 function dailyCfg(date){const seed=RNG.hash('df'+date);const open=['viaduct','larch','quarry','ferrow'];
   return {spec:DATA.spec({brakes:1,power:1,tank:1,sand:1,coupler:1}),open:new Set(open),lots:genLots(seed,open,{daily:1,wanted:1}),seed,mode:'daily',date};}
 GAME.genLots=genLots;GAME.dailyCfg=dailyCfg;GAME.careerLots=careerLots;
-function startShift(cfg){
+function startShift(cfg){timers.length=0;radioT=0;
   SIM.start(cfg);ART.invalidate();GAME.mode=cfg.mode;GAME.cfg=cfg;GAME.sel=null;GAME.zoomMul=1;GAME.flags={};GAME.areaSeen=new Set();
   setThr(0,true);setBrk(.6,true);setRev(1,true);$('card').classList.add('hidden');$('radio').classList.add('hidden');$('toasts').innerHTML='';
   UI.show(null);$('hud').classList.remove('hidden');GAME.layout();IN.levers.lvThr.draw();IN.levers.lvBrake.draw();RD.follow(0,true);GAME.state='play';

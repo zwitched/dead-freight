@@ -14,8 +14,8 @@ function follow(dt,snap){const S=SIM.S;if(!S.train)return;const L=S.loco,v=S.tra
   const a=TN.end(S.train,0),tA=TK.pt(a.e,a.s);const hx=Math.cos(L.h)*(v>=0?1:-1),hy=Math.sin(L.h)*(v>=0?1:-1);
   // heading toward end A is roughly loco heading (sprite +x points to A)
   const look=Math.min(150,Math.abs(v)*1.7);const tx=L.x+hx*look+cam.px,ty=L.y+hy*look+cam.py;
-  const tz=(2.05-Math.min(1,Math.abs(v)/75)*.95)*(GAME.zoomMul||1);const k=snap?1:Math.min(1,dt*2.2);
-  cam.x+=(tx-cam.x)*k;cam.y+=(ty-cam.y)*k;cam.z+=(tz-cam.z)*Math.min(1,dt*1.2)*(snap?99:1);cam.z=Math.max(.45,Math.min(2.4,cam.z));
+  const tz=(2.35-Math.min(1,Math.abs(v)/75)*1.15)*(GAME.zoomMul||1);const k=snap?1:Math.min(1,dt*2.2);
+  cam.x+=(tx-cam.x)*k;cam.y+=(ty-cam.y)*k;cam.z+=(tz-cam.z)*Math.min(1,dt*1.2)*(snap?99:1);cam.z=Math.max(.45,Math.min(3,cam.z));
   if(!GAME.panning){cam.px*=Math.pow(.25,dt);cam.py*=Math.pow(.25,dt);}
 }
 function drawChunks(){const [x0,y0]=toWorld(0,0),[x1,y1]=toWorld(W,H);const C=ART.CH;

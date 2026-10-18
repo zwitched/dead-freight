@@ -16,12 +16,25 @@ function setTab(t){tab=t;document.querySelectorAll('.tab').forEach(b=>b.classLis
   if(t==='board')board();if(t==='shed')shed();if(t==='repair')repairs();}
 function lotHtml(lots,spec){const by={};for(const l of lots){(by[l.loc]=by[l.loc]||[]).push(l);}let h='';let tot=0,tt=0;
   for(const loc in by){const L=DATA.LOC[loc];h+=`<div class="lot"><h3>${L.name}<i>${'·'.repeat(L.tier)}</i></h3>`;
-    for(const l of by[loc])for(const c of l.cars){const m=c.m+(c.k==='flat'?10:c.k==='mail'?14:12);tot+=c.v*(c.wanted?1.5:1);tt+=m;
+    for(const l of by[loc])for(const c of l.cars){const m=c.m+SIM.KINDS[c.k].t;tot+=c.v*(c.wanted?1.5:1);tt+=m;
       h+=`<div class="w"><span>${c.n}${c.fr?'<span class="tag fr">fragile</span>':''}${c.lo?'<span class="tag lo">loose</span>':''}${c.wanted?'<span class="tag wa">wanted +50%</span>':''}${c.last?'<span class="tag wa">the last one</span>':''}</span><span>${m} t</span><span>${money(c.v*(c.wanted?1.5:1))}</span></div>`;}h+='</div>';}
   return {h,tot,tt};}
 function board(){const c=SV.D.career;const lots=GAME.careerLots(c);const sp=DATA.spec(c.up);const {h,tot,tt}=lotHtml(lots,sp);
   const tip=!c.tut?'First shift. Dot will talk you through it.':c.day<4?'Take what you can bring back in one piece. You don\'t have to take everything.':'Deeper sidings pay more. The trip back is the hard part.';
-  $('tbBoard').innerHTML=`<div class="note">Freight out on the line today: ${lots.reduce((a,l)=>a+l.cars.length,0)} wagons, ${money(tot)} if it all comes home perfect. Fuel: ${sp.tank} gal.</div>${h}<div class="note">${tip}</div>`;}
+  const nw=lots.reduce((a,l)=>a+l.cars.length,0);$('tbBoard').innerHTML=`<canvas id="boardMap" width="400" height="230"></canvas><div class="note">Out on the line today: ${nw} wagon${nw>1?'s':''}, ${money(tot)} if it all comes home perfect. Fuel: ${sp.tank} gal.</div>${h}<div class="note">${tip}</div>`;
+  boardMap($('boardMap'),lots,new Set(c.open));}
+function boardMap(cv,lots,open){const g=cv.getContext('2d');g.fillStyle='#2c3322';g.fillRect(0,0,cv.width,cv.height);
+  // the map is tall, so draw it on its side: north to the right
+  g.save();g.translate(cv.width,0);g.rotate(Math.PI/2);const sc=Math.min(cv.height/MAP.W,cv.width/MAP.H)*.95;const ox=(cv.height-MAP.W*sc)/2,oy=(cv.width-MAP.H*sc)/2;
+  g.restore();g.save();g.translate(0,cv.height);g.rotate(-Math.PI/2);
+  for(const e of TK.E)for(const b of e.bars)b.open=open.has(e.barKey||'');drawNet(g,sc,ox,oy,3,0);
+  g.restore();
+  const P=(x,y)=>[oy+y*sc,cv.height-(ox+x*sc)];const pos={};
+  for(const l of lots){const [en,tw,off]=l.slot;const n=TK.N[en];const [px,py]=P(n.x,n.y);(pos[l.loc]=pos[l.loc]||{x:px,y:py,n:0}).n+=l.cars.length;}
+  g.font="bold 12px 'Arial Narrow',Arial,sans-serif";g.textAlign='center';
+  for(const k in pos){const p=pos[k];g.fillStyle='#ff9a3a';g.strokeStyle='#1c1814';g.lineWidth=2;g.beginPath();g.arc(p.x,p.y,6,0,7);g.fill();g.stroke();
+    const t=DATA.LOC[k].short+' ×'+p.n;const w=g.measureText(t).width+8;let ty=p.y-12;if(ty<10)ty=p.y+20;g.fillStyle='rgba(20,16,12,.8)';g.fillRect(p.x-w/2,ty-10,w,14);g.fillStyle='#ffd27a';g.fillText(t,p.x,ty+1);}
+  const [dx,dy]=P(800,3500);g.fillStyle='#efe6cf';g.fillRect(dx-5,dy-5,10,10);g.fillStyle='rgba(20,16,12,.8)';g.fillRect(dx-22,dy+8,44,14);g.fillStyle='#efe6cf';g.fillText('Depot',dx,dy+19);}
 function shed(){const c=SV.D.career;let h='<div class="note">Spend what the freight earns. Every upgrade is fitted overnight.</div>';
   for(const k in DATA.UP){const u=DATA.UP[k],lv=c.up[k]|0,max=u.cost.length;const cost=u.cost[lv];
     h+=`<div class="up"><h3>${u.name}<span>${u.lv[lv]}</span></h3><p>${u.desc}</p><div class="pips">${u.cost.map((_,i)=>`<i class="${i<lv?'on':''}"></i>`).join('')}</div>

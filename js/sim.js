@@ -11,8 +11,9 @@ function resetSwitches(){
       const hh=e.a===id?e.as:e.bs,dir=n.h+(hh>0?0:Math.PI);let d=Math.atan2(q.y-n.y,q.x-n.x)-dir;d=Math.abs(Math.atan2(Math.sin(d),Math.cos(d)));if(d<bd){bd=d;best=i;}});
     n.sw=best;n.def=best;}
 }
+const KINDS={open:{t:11,b:.85},hopper:{t:12,b:.8},van:{t:12,b:.9},flat:{t:10,b:.75},tank:{t:12,b:.8},mail:{t:14,b:1}};
 function mkCar(c,rng){
-  const kinds={open:{t:11,b:.85},hopper:{t:12,b:.8},van:{t:12,b:.9},flat:{t:10,b:.75},tank:{t:12,b:.8},mail:{t:14,b:1}};
+  const kinds=KINDS;
   const k=kinds[c.k]||kinds.open;const r=rng?rng():.5;
   return {loco:0,len:30,kind:c.k,ld:c.ld,name:c.n,desc:c.d,load:c.m,mass:k.t+c.m,value:c.v,fr:c.fr||0,lo:c.lo||0,cond:1,
     brk:180*(k.b*(.75+r*.5)),num:(rng?Math.floor(rng()*90000)+10000:40001),last:c.last||0,loc:c.loc,wanted:0,var:Math.floor((rng?rng():0)*4),hits:0};
@@ -132,5 +133,5 @@ function results(){
   const total=Math.max(0,pay+bonus.reduce((a,b)=>a+b.v,0)-fee);
   return {fail:S.fail,lines,pay,bonus,fee,total,cars:cars.length,fuelUsed:S.fuelUsed,dist:S.dist,maxV:S.maxV,couplings:S.couplings,hard:S.hardHits,last:cars.some(c=>c.last)};
 }
-return {S,start,step,mass,carsOn,dirSign,stopDist,ahead,lead,nextSwitch,throwSwitch,uncouple,useSand,canDeliver,inDepot,results,brakeForce,gradeForce,edgeBy,DEPOT_ZONE,emit};
+return {KINDS,S,start,step,mass,carsOn,dirSign,stopDist,ahead,lead,nextSwitch,throwSwitch,uncouple,useSand,canDeliver,inDepot,results,brakeForce,gradeForce,edgeBy,DEPOT_ZONE,emit};
 })();

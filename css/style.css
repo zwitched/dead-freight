@@ -125,3 +125,5 @@ button{font-family:var(--font);touch-action:manipulation;cursor:pointer}
 .hint{font-size:13px;color:var(--cream2);text-align:center}
 .map canvas{flex:1;min-height:0;width:100%;object-fit:contain;background:#3a4229;border-radius:8px}
 .legend{font-size:13px;color:var(--cream2);display:flex;gap:8px;align-items:center;justify-content:center}.lg{display:inline-block;width:10px;height:10px;border-radius:50%}.lg.y{background:#ffd76a}.lg.o{background:#ff9a3a}.lg.r{background:#c8432f}
+
+#boardMap{width:100%;border-radius:8px;flex:none}

@@ -34,7 +34,7 @@ async def main():
       pt=await E("(()=>{const v=SIM.carsOn()[0];return RD.toScreen(v.x,v.y)})()");await tc.tap(pt);await pg.wait_for_timeout(200)
       cr=await E("(()=>{const a=document.getElementById('card').getBoundingClientRect(),p=document.getElementById('panel').getBoundingClientRect();return [a.bottom<=p.top+1,a.top>=0,a.height]})()")
       t.chk(f'[{name}] wagon card sits above the control panel',await pg.is_visible('#card') and cr[0] and cr[1],cr)
-      await tc.tapel('#cbClose')
+      if await pg.is_visible('#card'):await tc.tapel('#cbClose')
       await pg.wait_for_timeout(300)
       d=await E("(()=>{const a=document.getElementById('bDeliver');if(!a)return null;const r=a.getBoundingClientRect(),p=document.getElementById('panel').getBoundingClientRect();return [r.bottom<=p.top+1,r.height]})()")
       t.chk(f'[{name}] Deliver button shows above the panel',d and d[0] and d[1]>=44,d)

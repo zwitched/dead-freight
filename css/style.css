@@ -37,12 +37,12 @@ button{font-family:var(--font);touch-action:manipulation;cursor:pointer}
 #toasts{position:fixed;left:0;right:0;bottom:calc(var(--safeB) + 300px);display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;z-index:8}
 .toast{background:#1c1814ee;border:1px solid #6a5d4c;border-radius:20px;padding:6px 14px;font-size:14px;animation:pop .2s;max-width:86%;text-align:center}
 .toast.good{border-color:#7fae6a;color:#d8f0c8}.toast.bad{border-color:#c0603e;color:#ffd0b8}
-#ctx{position:fixed;left:0;right:0;bottom:calc(var(--safeB) + 244px);display:flex;justify-content:center;gap:8px;z-index:7;pointer-events:none}
+#ctx{position:fixed;left:0;right:0;bottom:calc(var(--safeB) + var(--ph) + 8px);display:flex;justify-content:center;gap:8px;z-index:7;pointer-events:none}
 #ctx button{pointer-events:auto}
 .cbtn{min-height:50px;padding:0 22px;border-radius:10px;border:2px solid #f0d27a;background:linear-gradient(#e6bd45,#b98b23);color:#1c1408;font-size:18px;font-weight:bold;letter-spacing:.5px;box-shadow:0 4px 0 #6b4f12,0 8px 18px #0007;animation:pop .2s}
 .cbtn.alt{border-color:#8a7d68;background:linear-gradient(#4a4238,#332d26);color:var(--cream);box-shadow:0 4px 0 #1a1612,0 8px 18px #0007}
 .cbtn:active{transform:translateY(3px);box-shadow:0 1px 0 #6b4f12}
-#card{position:fixed;left:10px;right:10px;bottom:calc(var(--safeB) + 244px);z-index:9;background:#e8dcc0;color:#2a2018;border-radius:6px;padding:12px 14px;box-shadow:0 8px 24px #000a;border:1px solid #a89878;animation:pop .2s;
+#card{position:fixed;left:10px;right:10px;bottom:calc(var(--safeB) + var(--ph) + 8px);z-index:9;background:#e8dcc0;color:#2a2018;border-radius:6px;padding:12px 14px;box-shadow:0 8px 24px #000a;border:1px solid #a89878;animation:pop .2s;
  background-image:repeating-linear-gradient(#0000 0 21px,#9db4c822 21px 22px)}
 #cardName{font-weight:bold;font-size:18px}#cardDesc{font-size:14px;margin:4px 0 8px;font-style:italic;color:#4a3c2c}
 #cardStats{display:flex;flex-wrap:wrap;gap:6px;font-size:12px}#cardStats span{background:#2a201814;border-radius:10px;padding:2px 8px}
@@ -50,7 +50,7 @@ button{font-family:var(--font);touch-action:manipulation;cursor:pointer}
 #cardBtns{display:flex;gap:8px;margin-top:10px}#cardBtns button{flex:1;min-height:44px;border-radius:8px;border:2px solid #3a2e22;background:#3a2e22;color:#f0e6cc;font-size:15px;font-weight:bold}
 #cardBtns button.lite{background:transparent;color:#3a2e22}
 /* ---------- control panel */
-#panel{position:fixed;left:0;right:0;bottom:0;height:calc(236px + var(--safeB));padding:10px 10px calc(var(--safeB) + 10px);display:grid;grid-template-columns:96px 1fr 96px;gap:10px;z-index:6;
+#panel{position:fixed;left:0;right:0;bottom:0;height:calc(var(--ph) + var(--safeB));padding:10px 10px calc(var(--safeB) + 10px);display:grid;grid-template-columns:96px 1fr 96px;gap:10px;z-index:6;
  background:linear-gradient(#3a332b,#2a241e 30%,#221d18);border-top:3px solid #57493a;box-shadow:0 -6px 18px #0008}
 #panel:before{content:'';position:absolute;left:0;right:0;top:3px;height:6px;background:repeating-linear-gradient(-45deg,#d6b23a 0 10px,#1c1814 10px 20px);opacity:.55}
 .lever{position:relative;touch-action:none;margin-top:8px}
@@ -76,7 +76,7 @@ button{font-family:var(--font);touch-action:manipulation;cursor:pointer}
 #bPoints.busy{border-color:#c0603e}
 #bPoints svg{width:42px;height:32px;flex:none}#bPoints path{fill:none;stroke-width:4;stroke-linecap:round;stroke:#6a5d4c}#bPoints path.on{stroke:#ffd76a}
 #bPoints span{display:flex;flex-direction:column;min-width:0}#pDist{font-size:13px;color:var(--cream2);font-weight:normal}#pSet{font-style:normal;font-size:17px;font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#mrow{display:flex;gap:8px;height:44px}#mrow button{flex:1;border-radius:9px;border:2px solid #57493a;background:#2f2923;color:var(--cream);font-size:14px;font-weight:bold;letter-spacing:1px}
+#mrow{display:flex;gap:8px;height:44px}#mrow button{flex:1;min-width:0;border-radius:9px;border:2px solid #57493a;background:#2f2923;color:var(--cream);font-size:14px;font-weight:bold;letter-spacing:1px}
 #mrow button:active,#mrow button.down{background:#4a4036}
 #bSand.dis{opacity:.35}
 .flash{animation:flash 1s infinite}@keyframes flash{50%{box-shadow:0 0 0 4px #e0b53c99}}
@@ -127,3 +127,16 @@ button{font-family:var(--font);touch-action:manipulation;cursor:pointer}
 .legend{font-size:13px;color:var(--cream2);display:flex;gap:8px;align-items:center;justify-content:center}.lg{display:inline-block;width:10px;height:10px;border-radius:50%}.lg.y{background:#ffd76a}.lg.o{background:#ff9a3a}.lg.r{background:#c8432f}
 
 #boardMap{width:100%;border-radius:8px;flex:none}
+:root{--ph:236px}
+/* short phones (iPhone SE, small Androids): a tighter panel so the line stays visible */
+@media (max-height:720px){
+ :root{--ph:200px}
+ #panel{grid-template-columns:86px 1fr 86px;gap:8px;padding-top:8px}
+ .handle{height:46px}.handle b{font-size:12px}
+ #mid{gap:6px;margin-top:6px}#rev{height:44px}#rev button{font-size:16px}
+ #bPoints{min-height:52px;padding:4px 8px}#bPoints svg{width:34px;height:28px}#pSet{font-size:15px}#pDist{font-size:12px}
+ #mrow{height:42px}#mrow button{font-size:13px;letter-spacing:0}
+ #tut{font-size:14px;padding:8px 10px}
+ #card{padding:9px 12px}#cardDesc{margin:2px 0 6px}
+}
+@media (max-width:350px){#bPoints svg{display:none}#bPoints{padding:4px 8px}#pSet{font-size:14px}#pDist{font-size:11px}}

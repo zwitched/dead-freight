@@ -122,7 +122,7 @@ function hud(dt){hudT+=dt;if(hudT<.08)return;hudT=0;const v=Math.abs(S.train.v);
   if(S.loco.slip>.3)st='Wheelslip! Ease the power';sx.textContent=st;sx.classList.toggle('danger',!!(m&&m.danger)||S.loco.slip>.3);
   // points
   const nx=SIM.nextSwitch();GAME.nextSw=nx;const bp=$('bPoints');
-  if(nx){const n=TK.N[nx.id],sw=n.p.length===2?n.p:n.m;const label=routeLabel(nx.id,sw[n.sw],sw);$('pDist').textContent='Points in '+Math.round(nx.at*YD)+' yd';$('pSet').textContent='Set: '+label;$('pSet').style.fontSize=label.length>9?'14px':'';
+  if(nx){const n=TK.N[nx.id],sw=n.p.length===2?n.p:n.m;const label=routeLabel(nx.id,sw[n.sw],sw);$('pDist').textContent='Points in '+Math.round(nx.at*YD)+' yd';$('pSet').textContent='Set: '+label;$('pSet').style.fontSize=label.length>9&&innerWidth>350?'14px':'';
     const busy=TN.occupied(nx.id);bp.classList.toggle('busy',busy);bp.classList.toggle('live',nx.at<260&&!busy);const left=isLeft(nx.id,sw[n.sw],sw);$('pA').classList.toggle('on',left);$('pB').classList.toggle('on',!left);}
   else{$('pDist').textContent='No points ahead';$('pSet').textContent='';bp.classList.remove('live','busy');$('pA').classList.remove('on');$('pB').classList.remove('on');}
   $('bSand').textContent=S.spec.sand?('SAND '+S.sand):'SAND';$('bSand').classList.toggle('dis',!S.spec.sand||!S.sand);

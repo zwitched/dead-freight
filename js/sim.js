@@ -85,7 +85,7 @@ function step(dt){
       else{if(imp>C.BUMP){S.bumped++;for(const c of carsOn())damage(c,(imp-C.BUMP)*.012*(1+c.fr*2),'buffers');emit('bump',{imp,hard:1});}
         else emit('bump',{imp,hard:0,soft:imp>2});
         T.v=-nv*.12;if(Math.abs(T.v)<1)T.v=0;
-        if(r.hit.type==='bar'){const e=TK.E[TN.end(T,nv>0?0:1).e];emit('bar',{key:e.barKey});}}
+        if(r.hit.type==='bar'){const e=TK.E[TN.end(T,nv>0?0:1).e];const b=e.bars.find(b=>!b.open);emit('bar',{key:b?b.key:''});}}
     }
   }
   const V=Math.abs(T.v);S.maxV=Math.max(S.maxV,V);

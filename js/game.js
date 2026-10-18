@@ -101,7 +101,7 @@ function events(){while(S.ev.length){const e=S.ev.shift();
     if(GAME.sel)showCard(GAME.sel,S.train);}
   else if(e.type==='bump'){AU.play('bump',e.hard);if(e.hard){buzz(80);RD.cam.shake=5;toast('Hit the buffers','bad');}else if(e.soft)buzz(15);}
   else if(e.type==='crash'){AU.play('crash');buzz([100,50,200]);RD.cam.shake=12;SV.D.stats.derails++;later(1.2,()=>endShift());}
-  else if(e.type==='bar'){if(!GAME.flags['bar'+e.key]){GAME.flags['bar'+e.key]=1;radio(DATA.RADIO.bar[e.key]);}}
+  else if(e.type==='bar'){if(e.key&&DATA.RADIO.bar[e.key]&&!GAME.flags['bar'+e.key]){GAME.flags['bar'+e.key]=1;radio(DATA.RADIO.bar[e.key]);}}
   else if(e.type==='radio'){const l=DATA.RADIO[e.k];radio(Array.isArray(l)?l[(Math.random()*l.length)|0]:l);}
   else if(e.type==='area'){const L=DATA.LOC[e.a];if(L&&e.a!=='depot'){banner(L.name.toUpperCase(),'');const k='area_'+e.a;if(!SV.D[k]){SV.D[k]=1;SV.save();later(1,()=>radio(DATA.RADIO.area[e.a]));}}
     if(e.a==='viaduct'&&!GAME.areaSeen.has('v')){GAME.areaSeen.add('v');}}
@@ -122,7 +122,7 @@ function hud(dt){hudT+=dt;if(hudT<.08)return;hudT=0;const v=Math.abs(S.train.v);
   if(S.loco.slip>.3)st='Wheelslip! Ease the power';sx.textContent=st;sx.classList.toggle('danger',!!(m&&m.danger)||S.loco.slip>.3);
   // points
   const nx=SIM.nextSwitch();GAME.nextSw=nx;const bp=$('bPoints');
-  if(nx){const n=TK.N[nx.id],sw=n.p.length===2?n.p:n.m;const label=routeLabel(nx.id,sw[n.sw],sw);$('pDist').textContent='Points in '+Math.round(nx.at*YD)+' yd';$('pSet').textContent='Set: '+label;
+  if(nx){const n=TK.N[nx.id],sw=n.p.length===2?n.p:n.m;const label=routeLabel(nx.id,sw[n.sw],sw);$('pDist').textContent='Points in '+Math.round(nx.at*YD)+' yd';$('pSet').textContent='Set: '+label;$('pSet').style.fontSize=label.length>9?'14px':'';
     const busy=TN.occupied(nx.id);bp.classList.toggle('busy',busy);bp.classList.toggle('live',nx.at<260&&!busy);const left=isLeft(nx.id,sw[n.sw],sw);$('pA').classList.toggle('on',left);$('pB').classList.toggle('on',!left);}
   else{$('pDist').textContent='No points ahead';$('pSet').textContent='';bp.classList.remove('live','busy');$('pA').classList.remove('on');$('pB').classList.remove('on');}
   $('bSand').textContent=S.spec.sand?('SAND '+S.sand):'SAND';$('bSand').classList.toggle('dis',!S.spec.sand||!S.sand);
@@ -164,13 +164,15 @@ function pause(){if(GAME.state!=='play')return;GAME.state='pause';AU.hornOff();U
 function resume(){if(GAME.state!=='pause')return;UI.show(null);GAME.state='play';last=performance.now();AU.resume();}
 GAME.pause=pause;GAME.resume=resume;
 // ---------- loop
-function loop(now){const dt=Math.min(.1,(now-last)/1000);last=now;
+function loop(now){requestAnimationFrame(loop);const dt=Math.min(.1,(now-last)/1000);last=now;
+  try{tick(dt,now);}catch(err){GAME.errors=(GAME.errors||0)+1;console.error(err);}}
+function tick(dt,now){
   if(GAME.state==='play'){acc+=dt;let n=0;while(acc>=1/60&&n<8){SIM.step(1/60);acc-=1/60;n++;}if(n===8)acc=0;events();notes();tutTick(dt);hud(dt);
     for(let i=timers.length-1;i>=0;i--){timers[i].t-=dt;if(timers[i].t<=0){const f=timers[i].f;timers.splice(i,1);f();}}
     if(radioT>0){radioT-=dt;if(radioT<=0)$('radio').classList.add('hidden');}
     RD.follow(dt);miniT+=dt;if(miniT>.12){miniT=0;mini();}}
   else if(GAME.state==='title'||GAME.state==='menu'){titleCam(dt);}
-  AU.update(dt);RD.frame(dt,now/1000);requestAnimationFrame(loop);}
+  AU.update(dt);RD.frame(dt,now/1000);}
 let tcT=0;function titleCam(dt){tcT+=dt;const c=RD.cam;const y=3300-((tcT*14)%2600);c.x+=(760+Math.sin(tcT*.05)*120-c.x)*Math.min(1,dt*.5);c.y=y;c.z=1.1;}
 // ---------- boot
 function boot(){SV.load();AU.setOn(!!SV.D.set.snd);AU.setVol(SV.D.set.vol);TK.build(MAP);ART.init();RD.init($('cv'));

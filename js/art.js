@@ -148,7 +148,7 @@ function drawItem(g,it){
  if(t==='cutting'){const ei=SIM.edgeBy(it.edge[0],it.edge[1]);for(const side of [-1,1]){g.lineCap='round';for(const [w,c] of [[60,'#4a4232'],[44,'#5b5140'],[30,'#3f3a2e']]){g.strokeStyle=c;g.lineWidth=w*.5;g.beginPath();for(let s=it.s0;s<=it.s1;s+=8){const p=along(it.edge[0],it.edge[1],s,side*(14+w*.25));s===it.s0?g.moveTo(p.x,p.y):g.lineTo(p.x,p.y);}g.stroke();}}return;}
  if(t==='hedge'){g.lineCap='round';g.strokeStyle='rgba(0,0,0,.25)';g.lineWidth=11;g.beginPath();it.pts.forEach((p,i)=>i?g.lineTo(p[0]+3,p[1]+4):g.moveTo(p[0]+3,p[1]+4));g.stroke();g.strokeStyle='#3c4a2a';g.lineWidth=10;g.beginPath();it.pts.forEach((p,i)=>i?g.lineTo(p[0],p[1]):g.moveTo(p[0],p[1]));g.stroke();
    g.fillStyle='#4f5f36';for(const p of it.pts){g.beginPath();g.arc(p[0]-1,p[1]-1,4,0,7);g.fill();}return;}
- if(t==='tree'){const r=it.r;g.fillStyle='rgba(20,25,15,.35)';g.beginPath();g.arc(it.x+r*.35+3,it.y+r*.45+4,r,0,7);g.fill();
+ if(t==='tree'){const r=it.r;g.fillStyle='rgba(20,25,15,.3)';g.beginPath();g.ellipse(it.x+r*.3+2,it.y+r*.35+3,r*.85,r*.75,0,0,7);g.fill();
    if(it.k){ // larch / conifer: star of needles
      g.fillStyle=it.c>.5?'#2d3b24':'#34442a';g.beginPath();for(let i=0;i<14;i++){const a=i/14*6.283,rr=i%2?r*.55:r;g.lineTo(it.x+Math.cos(a)*rr,it.y+Math.sin(a)*rr);}g.fill();
      g.fillStyle='#4d5e36';g.beginPath();for(let i=0;i<10;i++){const a=i/10*6.283+.3,rr=i%2?r*.3:r*.62;g.lineTo(it.x-1+Math.cos(a)*rr,it.y-1+Math.sin(a)*rr);}g.fill();

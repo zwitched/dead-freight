@@ -49,30 +49,34 @@ async def main():
     await dr.set_brk(0);await dr.set_thr(5);await pg.wait_for_timeout(500)
     await tc.tapel('#bSand');await pg.wait_for_timeout(700)
     t.chk('SAND gives grip: no slip at notch 5 while sanding, one dose used',await E("SIM.S.sandT>0&&SIM.S.loco.slip<.3&&SIM.S.sand===2"),await E("[SIM.S.sandT,SIM.S.loco.slip,SIM.S.sand]"))
-    # ---- banks: a heavy train stalls on Kesh Bank, a light one climbs; leaving wagons recovers
-    await setup(pg,'J1','K1',30,(WT,7))
-    await dr.set_brk(0);await dr.set_thr(4);await pg.wait_for_timeout(16000)
-    x=await st(pg);
-    t.chk('7 x 51 t wagons stall on the 1-in-30 bank (stuck or rolling back)',x['V']<4 or x['v']>0,x['v'],x['e'])
+    # ---- banks: a heavy train stalls pulling up Kesh Bank, a light one climbs; leaving wagons recovers
+    # loco near the top of the bank facing downhill, 7 heavy wagons below it; reverse to haul them up
+    await setup(pg,'K1','J1',70,(WT,7))
+    K1="(()=>{const n=TK.N['K1'],L=SIM.S.loco;return Math.hypot(n.x-L.x,n.y-L.y)})()"
+    d0=await E(K1)
+    await dr.rev(-1);await dr.set_brk(0);await dr.set_thr(4);await pg.wait_for_timeout(14000)
+    x=await st(pg);d1=await E(K1)
+    t.chk('7 x 51 t wagons stall on the 1-in-30 bank (no headway uphill)',d1>d0-15,[d0,d1],x['v'])
     t.chk('Dot warns about the stall',await E("!!SIM.S.flags.stall||!!SIM.S.flags.roll"))
     await dr.stop();await dr.set_thr(0)
-    # leave 4 wagons: tap the 4th wagon from the loco, then the Leave button on its card
+    # leave the 4 lowest wagons: tap the 4th wagon from the loco, then Leave on its card
     q="(()=>{const T=SIM.S.train,li=T.veh.indexOf(SIM.S.loco);const v=T.veh[li-4];return RD.toScreen(v.x,v.y)})()"
-    pt=await E(q);top=await E("RD.view.top")
-    if pt[1]<top+60:  # off the top of the view: drag the map down to bring it into sight, as a player would
-      await tc.drag((200,top+60),(200,min(top+60+(top+160-pt[1]),560)),steps=12);await pg.wait_for_timeout(200);pt=await E(q)
+    pt=await E(q);top=await E("RD.view.top");bot=await E("innerHeight-RD.view.bot")
+    if pt[1]<top+60 or pt[1]>bot-60:  # out of the view: drag the map to bring it into sight, as a player would
+      cy=(top+bot)/2;await tc.drag((200,cy),(200,cy+(cy-pt[1])),steps=12);await pg.wait_for_timeout(200);pt=await E(q)
     await tc.tap(pt);await pg.wait_for_timeout(250)
-    t.chk('tapping a wagon opens its card',await pg.is_visible('#card') and await pg.is_visible('#cbLeave'),await pg.text_content('#cardName'))
+    t.chk('tapping a wagon opens its card',await pg.is_visible('#card') and await pg.is_visible('#cbLeave'),await pg.text_content('#cardName'),pt)
     await pg.screenshot(path=str(SHOTS/'wagon_card.png'))
     await tc.tapel('#cbLeave');await pg.wait_for_timeout(200)
     t.chk('Leave splits the train: 3 wagons stay coupled, 4 left on the bank',await E("SIM.carsOn().length")==3 and await E("TN.cons.some(c=>c!==SIM.S.train&&c.veh.length===4)"))
     await dr.set_brk(0);await dr.set_thr(4)
-    ok=False
+    ok=False;top_e=await E("SIM.edgeBy('K1','J2')")
     for i in range(240):
       x=await st(pg)
-      if x['e']==await E("SIM.edgeBy('K1','J2')"):ok=True;break
+      if x['e']==top_e:ok=True;break
       await pg.wait_for_timeout(250)
     t.chk('lighter train climbs the bank to the top',ok,x['e'],x['V'])
+    await dr.stop()
     # ---- coupling speed
     lot="[{loc:'brick',slot:['J1','DB',110],cars:[FIX.cargo('Chimney pots')]}]"
     await setup(pg,'DB','J1',30,None,lots=lot)

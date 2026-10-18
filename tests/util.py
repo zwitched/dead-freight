@@ -40,7 +40,12 @@ class Touch:
     r=await s.pg.evaluate(f"(()=>{{const r=document.querySelector('{sel}').getBoundingClientRect();return [r.x+r.width/2,r.y+r.height/2,r.width,r.height]}})()")
     return r
   async def tapel(s,sel):
-    c=await s.center(sel);await s.tap((c[0],c[1]));await s.pg.wait_for_timeout(60)
+    c=await s.center(sel);H=await s.pg.evaluate("innerHeight")
+    for i in range(4):  # off screen in a scrolling list: swipe it into view with a finger, like a player
+      if c[1]-c[3]/2>=0 and c[1]+c[3]/2<=H:break
+      dy=max(-300,min(300,(H/2)-c[1]));x0=c[0]
+      await s.drag((x0,H/2),(x0,H/2+dy),steps=10);await s.pg.wait_for_timeout(350);c=await s.center(sel)
+    await s.tap((c[0],c[1]));await s.pg.wait_for_timeout(60)
   # move a lever with a real finger: grab the handle, slide to the spot for value v (0..1)
   async def lever(s,lid,v):
     g=await s.pg.evaluate(f"""(()=>{{const el=document.getElementById('{lid}'),h=el.querySelector('.handle');const r=el.getBoundingClientRect(),hr=h.getBoundingClientRect();

@@ -21,7 +21,7 @@ function mkCar(c,rng){
 // cfg: {spec, open:Set of repair keys, lots:[{slot:[end,toward,off], cars:[cargo]}], fuel, mode}
 function start(cfg){
   TN.reset();resetSwitches();S.cfg=cfg;S.spec=cfg.spec;S.on=true;S.t=0;S.ev.length=0;S.ctl.thr=0;S.ctl.brk=.6;S.ctl.rev=1;
-  for(const e of TK.E)for(const b of e.bars)b.open=cfg.open.has(e.barKey||'');
+  for(const e of TK.E)for(const b of e.bars)b.open=cfg.open.has(b.key);
   const rng=RNG.make(cfg.seed||1);
   S.loco={loco:1,len:36,mass:cfg.spec.mass,face:1,name:'D4071',wheel:0,slip:0,cond:1};
   S.train=TN.place(0,24,1,[S.loco]);S.train.loco=S.loco;

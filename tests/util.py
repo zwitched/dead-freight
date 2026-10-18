@@ -42,7 +42,9 @@ class Touch:
   async def tapel(s,sel):
     c=await s.center(sel);H=await s.pg.evaluate("innerHeight")
     for i in range(4):  # off screen in a scrolling list: swipe it into view with a finger, like a player
-      if c[1]-c[3]/2>=0 and c[1]+c[3]/2<=H:break
+      hit=await s.pg.evaluate(f"(()=>{{const el=document.querySelector('{sel}');const h=document.elementFromPoint({c[0]},{c[1]});return !!h&&(h===el||el.contains(h))}})()") if 0<=c[1]<=H else False
+      if hit:break
+      if not (await s.pg.evaluate(f"(()=>{{const el=document.querySelector('{sel}');let p=el.parentElement;while(p&&p!==document.body){{const o=getComputedStyle(p).overflowY;if((o==='auto'||o==='scroll')&&p.scrollHeight>p.clientHeight)return true;p=p.parentElement}}return false}})()")):break
       dy=max(-300,min(300,(H/2)-c[1]));x0=c[0]
       await s.drag((x0,H/2),(x0,H/2+dy),steps=10);await s.pg.wait_for_timeout(350);c=await s.center(sel)
     await s.tap((c[0],c[1]));await s.pg.wait_for_timeout(60)

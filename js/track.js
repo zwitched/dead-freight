@@ -28,7 +28,7 @@ function build(def){
     const L=acc;const lastx=dense[dense.length-2],lasty=dense[dense.length-1];
     if(L-(next-DS)>.05)pts.push(lastx,lasty);
     const e={id:i,a:ai,b:bi,as:sa,bs:sb,L,pts:new Float32Array(pts),n:pts.length/2,za:a.z,zb:b.z,grade:(b.z-a.z)/L,
-      area:o.area||'',route:o.route||'',kind:o.kind||'main',bars:(o.bars||[]).map(s=>({s:s<0?L+s:s,key:o.barKey||''})),wet:o.wet||0,weeds:o.weeds||0};
+      area:o.area||'',route:o.route||'',kind:o.kind||'main',bars:(o.bars||[]).map(s=>({s:s<0?L+s:s,key:o.barKey||''})),wet:o.wet||0,weeds:o.weeds||0,barKey:o.barKey||''};
     // curve speed limit per sample
     const lim=new Float32Array(e.n);
     for(let j=0;j<e.n;j++){

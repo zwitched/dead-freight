@@ -3,7 +3,10 @@ Identity: physical train handling on a top-down rail network. Two levers (brake 
 Weight -> slower accel, longer braking (stop marker), grades/stall + wheelslip, fragile cargo, couple speed.
 
 ## Done
-- (starting) repo init
+- repo init
+- Vertical slice DONE and verified by tests/test_slice.py (34/34, Pixel 7 + iPhone 13, real CDP touches on levers/buttons)
+- modules: track, map, train, sim, art, render, audio, input, ui, game, save, data, rng
 
 ## Next
-- track graph + map, train consist physics, input, vertical slice test
+- art polish (look at screenshots), more tests (mechanics, menus, modes, save, layout, http/offline)
+- PWA manifest+sw+icons, build.py dist, README, deploy

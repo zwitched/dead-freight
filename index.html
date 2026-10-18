@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#2a241d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="The railway closed thirty years ago. Nobody told the trains. Drive a tired shunter out, couple up the freight that got left behind, and bring it home.">
+<title>Dead Freight</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<canvas id="cv"></canvas>
+<div id="rotate"><div><b>Turn your phone upright.</b><span>The cab only fits one way.</span></div></div>
+
+<div id="hud" class="hidden">
+ <div id="top">
+  <button id="bPause" class="ib" aria-label="Pause"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg></button>
+  <div id="gSpeed"><b id="spd">0</b><i>mph</i></div>
+  <div id="gInfo">
+   <div id="wt">40 t</div>
+   <div id="fuel"><span>FUEL</span><div id="fuelBar"><i></i></div></div>
+   <div id="stopTxt"></div>
+  </div>
+  <button id="bMap" aria-label="Map"><canvas id="mini" width="120" height="200"></canvas></button>
+ </div>
+ <div id="radio" class="hidden"><b>DOT</b><span id="radioTxt"></span></div>
+ <div id="tut" class="hidden"></div>
+ <div id="banner" class="hidden"></div>
+ <div id="toasts"></div>
+ <div id="ctx"></div>
+ <div id="card" class="hidden"><div id="cardName"></div><div id="cardDesc"></div><div id="cardStats"></div><div id="cardBtns"></div></div>
+ <div id="panel">
+  <div class="lever brake" id="lvBrake"><div class="lt"><div class="fill"></div><div class="ticks"><span>OFF</span><span></span><span></span><span>FULL</span></div></div><div class="handle"><b>BRAKE</b></div></div>
+  <div id="mid">
+   <div id="rev"><button id="bFwd" class="on">FWD</button><button id="bRev">REV</button></div>
+   <button id="bPoints"><svg id="pIcon" viewBox="0 0 40 30"><path id="pA" d="M6 26 L20 14 L20 3"/><path id="pB" d="M20 14 L34 4"/></svg><span><b id="pDist">No points ahead</b><i id="pSet"></i></span></button>
+   <div id="mrow"><button id="bHorn">HORN</button><button id="bSand">SAND</button></div>
+  </div>
+  <div class="lever thr" id="lvThr"><div class="lt"><div class="fill"></div><div class="ticks"><span>5</span><span>4</span><span>3</span><span>2</span><span>1</span><span>0</span></div></div><div class="handle"><b>POWER</b></div></div>
+ </div>
+</div>
+
+<div class="screen" id="sTitle">
+ <div class="logo"><div class="plate"><span class="l1">DEAD</span><span class="l2">FREIGHT</span></div><div class="sub">The railway closed thirty years ago.<br>Nobody told the trains.</div></div>
+ <div class="col"><button class="btn big primary" id="bStart">Clock on</button></div>
+ <div class="foot">Best with sound. Hold your phone upright.</div>
+</div>
+<div class="screen hidden" id="sMenu"><div class="panel">
+ <h1>Dead Freight</h1>
+ <button class="btn big primary" id="bCareer">Career</button>
+ <button class="btn" id="bNewCareer">New career</button>
+ <button class="btn" id="bDaily">Daily freight</button>
+ <div class="row"><button class="btn" id="bLog">Logbook</button><button class="btn" id="bSettings">Settings</button></div>
+ <button class="btn small" id="bHelp">How to drive</button>
+</div></div>
+<div class="screen hidden" id="sDepot"><div class="panel tall">
+ <div class="dhead"><div><h2 id="dTitle">Hallow Junction</h2><div class="subh" id="dSub"></div></div><div class="cash" id="dCash">$0</div></div>
+ <div class="tabs"><button class="tab on" data-tab="board">Board</button><button class="tab" data-tab="shed">Engine shed</button><button class="tab" data-tab="repair">Line repairs</button></div>
+ <div class="tabbody" id="tbBoard"></div><div class="tabbody hidden" id="tbShed"></div><div class="tabbody hidden" id="tbRepair"></div>
+ <div class="row"><button class="btn small" id="bDepotBack">Menu</button><button class="btn primary" id="bGo">Start shift</button></div>
+</div></div>
+<div class="screen hidden" id="sDaily"><div class="panel tall"><h2>Daily freight</h2><div class="subh" id="dyDate"></div><div id="dyBody" class="tabbody"></div>
+ <div class="row"><button class="btn small" id="bDailyBack">Menu</button><button class="btn primary" id="bDailyGo">Start</button></div></div></div>
+<div class="screen hidden" id="sPause"><div class="panel">
+ <h2>Paused</h2>
+ <button class="btn big primary" id="bResume">Resume</button>
+ <button class="btn" id="bPauseMap">Map</button>
+ <button class="btn" id="bTow">Radio for a tow</button>
+ <div class="row"><button class="btn" id="bPauseSet">Settings</button><button class="btn" id="bPauseHelp">Controls</button></div>
+ <button class="btn small" id="bAbandon">Abandon shift</button>
+ <div class="hint" id="pauseHint"></div>
+</div></div>
+<div class="screen hidden" id="sResult"><div class="panel tall"><h2 id="rTitle">Shift over</h2><div class="subh" id="rSub"></div><div id="rBody" class="tabbody"></div><button class="btn big primary" id="bResOk">Back to the depot</button></div></div>
+<div class="screen hidden" id="sSettings"><div class="panel">
+ <h2>Settings</h2>
+ <label class="set"><span>Sound</span><input type="checkbox" id="setSnd"></label>
+ <label class="set"><span>Volume</span><input type="range" id="setVol" min="0" max="1" step="0.05"></label>
+ <label class="set"><span>Vibration</span><input type="checkbox" id="setBuzz"></label>
+ <label class="set"><span>Stopping marker</span><input type="checkbox" id="setMarker"></label>
+ <button class="btn small danger" id="bWipe">Erase all progress</button>
+ <button class="btn back" id="bSetBack">Back</button>
+</div></div>
+<div class="screen hidden" id="sLog"><div class="panel tall"><h2>Logbook</h2><div id="logBody" class="tabbody"></div><button class="btn back" id="bLogBack">Back</button></div></div>
+<div class="screen hidden" id="sHelp"><div class="panel tall"><h2>How to drive</h2><div class="tabbody help">
+ <p><b>Brake</b> lever on the left. Slide it up to let off, down to stop. <b>Power</b> on the right, six notches.</p>
+ <p><b>FWD / REV</b> picks the direction. Stop first to change it.</p>
+ <p><b>Points</b>: the button shows the next set of points ahead and where they send you. Tap it, or tap the points on the track, to change them. You can't move points with a train sitting on them.</p>
+ <p><b>Coupling</b>: run gently into a wagon. Under 4 mph is a soft coupling. Faster than that breaks things inside.</p>
+ <p><b>Weight</b>: every wagon makes the train slower to start and much slower to stop. The marker on the track shows where you'd stop on full brake. Red means you won't make it.</p>
+ <p><b>Banks</b>: heavy trains stall on hills and slip on full power. Ease off a notch when the wheels spin, take a run at it, or leave a wagon behind. Sand helps.</p>
+ <p><b>Fragile</b> loads hate hard braking and couplings. <b>Loose</b> loads spill on fast curves. Watch the curve limit boards.</p>
+ <p><b>Deliver</b>: stop with the whole train past the yellow board in the depot goods road, then press Deliver.</p>
+ <p>Tap a wagon to read its label or leave it behind. Drag the view to look around.</p>
+</div><button class="btn back" id="bHelpBack">Back</button></div></div>
+<div class="screen hidden" id="sMap"><div class="panel tall map"><h2>The line</h2><canvas id="bigmap" width="600" height="1000"></canvas><div class="legend"><span class="lg y"></span>You <span class="lg o"></span>Freight <span class="lg r"></span>Closed</div><button class="btn back" id="bMapBack">Close</button></div></div>
+<div class="screen hidden" id="sEnd"><div class="panel tall"><h2>The last train</h2><div class="tabbody help" id="endBody"></div><button class="btn big primary" id="bEndOk">Carry on</button></div></div>
+<div class="screen hidden" id="sConfirm"><div class="panel"><h2 id="cfT"></h2><p class="subh" id="cfB"></p><div class="row"><button class="btn" id="cfNo">Cancel</button><button class="btn primary" id="cfYes">Yes</button></div></div></div>
+
+<script src="js/rng.js"></script>
+<script src="js/track.js"></script>
+<script src="js/map.js"></script>
+<script src="js/train.js"></script>
+<script src="js/data.js"></script>
+<script src="js/sim.js"></script>
+<script src="js/art.js"></script>
+<script src="js/render.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/save.js"></script>
+<script src="js/input.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/game.js"></script>
+<script>if('serviceWorker' in navigator&&location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));</script>
+</body>
+</html>

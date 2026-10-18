@@ -51,11 +51,13 @@ async def main():
     t.chk('reload: title shows again',await pg.is_visible('#bStart'))
     t.chk('reload: cash, day, upgrades and settings kept',await E("SV.D.career.cash===777&&SV.D.career.day==="+str(day)+"&&SV.D.career.up.brakes===2&&SV.D.set.snd===0"))
     await tc.tapel('#bStart');await pg.wait_for_timeout(200)
-    t.chk('reload: Clock on opens the depot of the saved career',await pg.is_visible('#sDepot') and '777' in await pg.text_content('#sDepot'))
+    t.chk('reload: Clock on offers the main menu with the career',await pg.is_visible('#sMenu'))
+    await tc.tapel('#bCareer');await pg.wait_for_timeout(200)
+    t.chk('reload: Continue opens the depot of the saved career',await pg.is_visible('#sDepot') and '777' in await pg.text_content('#sDepot'))
     await tc.tapel('#bGo');await pg.wait_for_timeout(500)
     t.chk('reload: upgraded brakes are in the shift',await E("SIM.S.spec.Bl")==1450)
     # 5. a corrupt save falls back to a fresh one instead of breaking
-    await E("localStorage.setItem('deadfreight.v1','{oops')");await pg.reload();await pg.wait_for_timeout(700);tc=await Touch(pg).init()
+    await E("SV.save=()=>{};localStorage.setItem('deadfreight.v1','{oops')");await pg.reload();await pg.wait_for_timeout(700);tc=await Touch(pg).init()
     await tc.tapel('#bStart');await pg.wait_for_timeout(300)
     t.chk('corrupt save: the game still starts a fresh career',await pg.is_visible('#sDepot') and await E("SV.D.career.day===1"))
     # 6. pause on background, resume on return

@@ -74,6 +74,7 @@ const RADIO={
  slip:['She\'s slipping. Ease the throttle back a notch.','Wheels are spinning. Less throttle, more patience.'],
  stall:['You\'re not getting up there with that lot. Back down and take a run at it, or leave a wagon.'],
  roll:['You\'re rolling back. Brake, love.'],
+ fuel0:['That\'s her dry. Brake to a stand and Dobbs will come out with the tow. Or coast home, if it\'s downhill.'],
  fuel25:['Quarter tank. Start thinking about home.'],fuel10:['Running on fumes. Head for the depot.'],
  hard:['That was a firm one. Whatever was in there has opinions now.','Bit brisk on the coupling there.'],
  soft:['Lovely. Barely heard that one.','Nice and gentle.'],

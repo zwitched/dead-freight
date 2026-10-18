@@ -1,12 +1,17 @@
 # DEAD FREIGHT progress
-Identity: physical train handling on a top-down rail network. Two levers (brake left, throttle right), reverser, tap points.
-Weight -> slower accel, longer braking (stop marker), grades/stall + wheelslip, fragile cargo, couple speed.
+Identity: physical train handling on a top-down rail network. Two levers (brake left, power right), FWD/REV, tap points.
+Weight -> slower acceleration, longer braking (stop marker), stalls and wheelslip on banks, fragile and loose loads, coupling speed, points locked under a train.
 
 ## Done
-- repo init
-- Vertical slice DONE and verified by tests/test_slice.py (34/34, Pixel 7 + iPhone 13, real CDP touches on levers/buttons)
-- modules: track, map, train, sim, art, render, audio, input, ui, game, save, data, rng
+- Vertical slice verified by tests/test_slice.py (Pixel 7 + iPhone 13, real CDP touches)
+- Career (shifts, cash, 5 upgrades x3, 4 line repairs, ending), Daily (seeded by date), logbook notes, settings
+- PWA manifest + service worker + icons, build.py -> dist/index.html, README
+- Physics retune (G 32, more adhesion and pull) so early trains are forgiving
+- Bugs found by tests and fixed: barrier radio crash froze the game; repaired lines never opened (bar keys);
+  timers leaking between shifts; left-behind wagons recoupled on the slightest roll back; stall warning never fired
+- Main loop catches errors so a bad frame cannot freeze the game
+- Test suites: slice, mechanics, menus, recovery, layout, http/offline, career bot, perf (tests/run_all.sh)
 
 ## Next
-- art polish (look at screenshots), more tests (mechanics, menus, modes, save, layout, http/offline)
-- PWA manifest+sw+icons, build.py dist, README, deploy
+- Run all suites green, screenshots review, rebuild dist
+- Deploy: zwitched/dead-freight, Pages, release v1.0.0

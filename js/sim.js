@@ -100,7 +100,7 @@ function step(dt){
   if(notch>0&&V<2&&Math.sign(Fg)===-sg&&Math.abs(Fg)+M*C.R0>Math.abs(Ftr)*.85&&carsOn().length){S.stallT+=dt;if(S.stallT>2.5&&!S.flags.stall){S.flags.stall=1;emit('radio',{k:'stall'});}}else S.stallT=0;
   if(V>3&&Math.sign(T.v)===-sg&&notch>0&&S.ctl.brk<.2){S.rollT+=dt;if(S.rollT>1&&!S.flags.roll){S.flags.roll=1;emit('radio',{k:'roll'});}}else S.rollT=0;
   // fuel
-  const fr=S.fuel/S.tank;if(fr<.25&&!S.flags.f25){S.flags.f25=1;emit('radio',{k:'fuel25'});}if(fr<.1&&!S.flags.f10){S.flags.f10=1;emit('radio',{k:'fuel10'});}
+  const fr=S.fuel/S.tank;if(fr<.25&&!S.flags.f25){S.flags.f25=1;emit('radio',{k:'fuel25'});}if(fr<.1&&!S.flags.f10){S.flags.f10=1;emit('radio',{k:'fuel10'});}if(S.fuel<=0&&!S.flags.f0&&!inDepot()){S.flags.f0=1;emit('radio',{k:'fuel0'});}
   if(S.fuel<=0&&V<.3&&!inDepot()){S.stopT+=dt;if(S.stopT>1.5&&!S.fail){S.fail='fuel';emit('stranded');}}
   // areas
   const ar=areaAt(L.x,L.y);if(ar&&!S.visited.has(ar)){S.visited.add(ar);emit('area',{a:ar});}
